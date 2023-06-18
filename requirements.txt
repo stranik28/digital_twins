@@ -1,0 +1,12 @@
+fastapi-cache2[redis]
+fastapi
+sqlalchemy
+asyncpg
+uvicorn
+python-dotenv
+pydantic
+numpy~=1.24.3
+pandas~=2.0.2
+geopy~=2.3.0
+xgboost
+scikit-learn
