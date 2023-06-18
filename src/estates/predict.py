@@ -8,7 +8,6 @@ from estates.schemas import real_EstateBase
 
 city_center_coordinates = [55.7522, 37.6156]
 
-# rf_model_path = 'models/rf_model.pkl'
 xgb_model_path = 'models/xgb_model.pkl'
 
 

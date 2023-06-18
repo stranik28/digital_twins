@@ -6,6 +6,7 @@ from database import get_async_session
 from fastapi_cache.decorator import cache
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
+from datetime import datetime
 
 router = APIRouter(prefix="/estates", tags=["estates"])
 
@@ -44,15 +45,9 @@ async def get_estate(latitude:str, longitude:str, db: AsyncSession = Depends(get
 @router.get("/area", response_model=List[GetEstate])
 # @cache(expire=86400)
 async def get_estate(latitude1:str, longitude1:str, latitude2:str, longitude2:str,\
-                    filter:str, db: AsyncSession = Depends(get_async_session)):
+                    filter:str,time:datetime, db: AsyncSession = Depends(get_async_session)):
     try:
-        if filter == "Voda":
-            return await EsateRepository.get_area_voda(db, latitude1, longitude1, latitude2, longitude2)
-        elif filter == "Kanalizacija":
-            return await EsateRepository.get_area_kanalizacija(db, latitude1, longitude1, latitude2, longitude2)
-        elif filter == "Price":
-            return await EsateRepository.get_area_price(db, latitude1, longitude1, latitude2, longitude2)
-        elif filter == "Visiting":
-            return await EsateRepository.get_area_visiting(db, latitude1, longitude1, latitude2, longitude2)
+        return await EsateRepository.get_area(time, filter, latitude1, longitude1, latitude1,\
+                                            latitude2, longitude2, db)
     except ObjectDoesNotExist as e:
         raise HTTPException(status_code=404, detail=e.message)

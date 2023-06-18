@@ -22,3 +22,37 @@ services:
         - redis
       volumes:
         - .:/app
+    celery:
+      build:
+          context: .
+      env_file:
+        - .env
+      volumes:
+        - ./utils:/app/utils 
+      container_name: celery_app
+      command: ["/app/celery.sh", "celery"]
+      depends_on:
+        - redis
+    celery-beat:
+      build:
+          context: .
+      env_file:
+        - .env
+      volumes:
+        - ./utils:/app/utils 
+      container_name: celery-beat
+      command: ["/app/celery.sh", "beat"]
+      depends_on:
+        - redis
+    flower:
+      build:
+        context: .
+      env_file:
+        - .env
+      container_name: flower_app
+      command: ["/app/celery.sh", "flower"]
+      depends_on:
+        - redis
+        - celery
+      ports:
+        - 8888:5555

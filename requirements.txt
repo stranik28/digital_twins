@@ -10,3 +10,6 @@ pandas~=2.0.2
 geopy~=2.3.0
 xgboost
 scikit-learn
+statsmodels
+uvicorn[standard]
+celery[redis]

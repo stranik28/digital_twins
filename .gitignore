@@ -162,3 +162,5 @@ cython_debug/
 .notes
 
 src/models/*
+
+test.py

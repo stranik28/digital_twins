@@ -1,8 +1,5 @@
 from pydantic import BaseModel
 
-
-# to pydantic model
-
 class real_EstateBase(BaseModel):
     name: str
     latitude: str
@@ -27,3 +24,13 @@ class GetEstate(BaseModel):
     id: int
     name: str
     totalArea: float
+
+class GetAnalyticsPrice(BaseModel):
+    id: int
+    name: str
+    price: float
+
+class GetAnalyticsTraffic(BaseModel):
+    id: int
+    name: str
+    traffic: int

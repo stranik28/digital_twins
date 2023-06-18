@@ -1,10 +1,13 @@
-from estates.schemas import EstateResponse, GetEstate
-from estates.models import Real_Estate
+from estates.schemas import EstateResponse, GetEstate, real_EstateBase,\
+    GetAnalyticsTraffic
+from estates.models import Real_Estate, Car_Traffic, People_Traffic, Water_Level,\
+    Gas_Level, Electricity_Level, Trash_Level 
 from exceptions import ObjectDoesNotExist
 from sqlalchemy import insert, select
-from estates.schemas import real_EstateBase
 from typing import List
 from estates.predict import predict
+from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import datetime
 
 class EsateRepository:
     
@@ -55,6 +58,86 @@ class EsateRepository:
             raise ObjectDoesNotExist("Estate not found")
         return resp
     
-    async def get_area(filter:str, latitude1:str, longitude1:str, latitude2:str, longitude2:str,\
-                    db):
-        pass
+    async def get_area(time:datetime,filter:str, latitude1:str, longitude1:str, latitude2:str, longitude2:str,db: AsyncSession):
+        if filter == "Voda":
+            query = select(Water_Level)\
+                .where(Water_Level.latitude >= latitude1,\
+                Water_Level.latitude <= latitude2,\
+                Water_Level.longitude >= longitude1,\
+                Water_Level.longitude <= longitude2)\
+                .order_by(Water_Level.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        elif filter == "Trash":
+            query = select(Trash_Level)\
+                .where(Trash_Level.latitude >= latitude1,\
+                Trash_Level.latitude <= latitude2,\
+                Trash_Level.longitude >= longitude1,\
+                Trash_Level.longitude <= longitude2)\
+                .order_by(Trash_Level.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        elif filter == "Price":
+            query = select(EsateRepository)\
+                .where(EsateRepository.latitude >= latitude1,\
+                EsateRepository.latitude <= latitude2,\
+                EsateRepository.longitude >= longitude1,\
+                EsateRepository.longitude <= longitude2)
+            query = await db.execute(query)
+            query = query.scalars().all()
+            resp = [GetEstate(**i.__dict__) for i in query]
+        elif filter == "Visiting":
+            query = select(People_Traffic)\
+                .where(People_Traffic.latitude >= latitude1,\
+                People_Traffic.latitude <= latitude2,\
+                People_Traffic.longitude >= longitude1,\
+                People_Traffic.longitude <= longitude2)\
+                .order_by(People_Traffic.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        elif filter == "Gas":
+            query = select(Gas_Level)\
+                .where(Gas_Level.latitude >= latitude1,\
+                Gas_Level.latitude <= latitude2,\
+                Gas_Level.longitude >= longitude1,\
+                Gas_Level.longitude <= longitude2)\
+                .order_by(Gas_Level.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        elif filter == "Electricity":
+            query = select(Electricity_Level)\
+                .where(Electricity_Level.latitude >= latitude1,\
+                Electricity_Level.latitude <= latitude2,\
+                Electricity_Level.longitude >= longitude1,\
+                Electricity_Level.longitude <= longitude2)\
+                .order_by(Electricity_Level.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        elif filter == "Car":
+            query = select(Car_Traffic)\
+                .where(Car_Traffic.latitude >= latitude1,\
+                Car_Traffic.latitude <= latitude2,\
+                Car_Traffic.longitude >= longitude1,\
+                Car_Traffic.longitude <= longitude2)\
+                .order_by(Car_Traffic.time.desc())
+            query = await db.execute(query)
+            query = query.scalars().first()
+            if query is None:
+                raise ObjectDoesNotExist("Записи не найдены")
+            resp = GetAnalyticsTraffic(**query.__dict__)
+        return resp
